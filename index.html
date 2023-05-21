@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>House Floor Plan Layout</title>
+    <style>
+    
+		#house {
+			width: 600px;
+			height: 400px;
+			border: 2px solid black;
+			position: relative;
+		}
+
+		.wall {
+			position: absolute;
+			border: 2px solid black;
+			background-color: lightgray;
+			cursor: pointer;
+		}
+
+		/* .wall-top {
+			top: 0;
+			left: 0;
+			position: absolute;
+			border: 4px solid rgb(228, 16, 16);
+			background-color: rgb(184, 172, 172);
+			cursor: pointer;
+			width: 200px;
+		} */
+
+		.handle {
+			position: absolute;
+			width: 10px;
+			height: 10px;
+			background-color: black;
+			border-radius: 50%;
+			cursor: pointer;
+		}
+
+		#top-handle {
+			top: -5px;
+			left: 50%;
+			margin-left: -5px;
+		}
+
+		#bottom-handle {
+			bottom: -5px;
+			left: 50%;
+			margin-left: -5px;
+		}
+
+		#left-handle {
+			top: 50%;
+			left: -5px;
+			margin-top: -5px;
+		}
+
+		#right-handle {
+			top: 50%;
+			right: -5px;
+			margin-top: -5px;
+		}
+ 
+
+		/* New */
+
+		.inner {
+			position: absolute;
+			width: 10px;
+			height: 10px;
+			background-color: black;
+			border-radius: 50%;
+			cursor: pointer;
+		}
+        
+		.wall-top {
+			top: 0;
+			left: 0;
+			position: absolute;
+			border: 4px solid rgb(228, 16, 16);
+			background-color: rgb(184, 172, 172);
+			cursor: pointer;
+			width: 200px;
+			height: 2px;
+		}
+
+		#wall-top-handle {
+			top: 0px;
+			left: 100px;
+			margin-left: -5px;
+		}
+
+	</style>
+  </head>
+  <body>
+    <div id="house">
+
+		<div class="wall" id="front-wall"></div>
+		<div class="handle" id="top-handle"></div>
+
+		<div class="wall" id="back-wall"></div>
+		<div class="handle" id="bottom-handle"></div>
+
+		<div class="wall" id="left-wall"></div>
+		<div class="handle" id="left-handle"></div>
+
+		<div class="wall" id="right-wall"></div>
+		<div class="handle" id="right-handle"></div>
+
+		<!-- NEW -->
+
+		<div class="wall-top" id="wall-top"></div>
+		<div class="inner" id="wall-top-handle"></div>
+
+    </div>
+    <script>
+
+		const house = document.querySelector('#house');
+		const walls = document.querySelectorAll('.wall');
+		const handles = document.querySelectorAll('.handle');
+		let activeHandle = null;
+		let initialX = 0;
+		let initialY = 0;
+		let initialWidth = 0;
+		let initialHeight = 0;
+
+		function startResize(event) {
+			console.log('handle startResize()');
+			activeHandle = event.target;
+			const wall = activeHandle.parentElement;
+			initialX = event.clientX;
+			initialY = event.clientY;
+			initialWidth = wall.offsetWidth;
+			initialHeight = wall.offsetHeight;
+			document.addEventListener('mousemove', resizeWall);
+			document.addEventListener('mouseup', stopResize);
+		}
+
+		function resizeWall(event) {
+			console.log('handle resizeWall()');
+			if (activeHandle.id === 'top-handle') {
+				const newHeight = initialHeight + (initialY - event.clientY);
+
+				if (newHeight > 0) {
+					activeHandle.parentElement.style.top = event.clientY + 'px';
+					activeHandle.parentElement.style.height = newHeight + 'px';
+				}
+
+			} else if (activeHandle.id === 'bottom-handle') {
+				const newHeight = initialHeight + (event.clientY - initialY);
+
+				if (newHeight > 0) {
+					activeHandle.parentElement.style.height = newHeight + 'px';
+				}
+
+			} else if (activeHandle.id === 'left-handle') {
+				const newWidth = initialWidth + (initialX - event.clientX);
+
+				if (newWidth > 0) {
+					activeHandle.parentElement.style.left = event.clientX + 'px';
+					activeHandle.parentElement.style.width = newWidth + 'px';
+				}
+
+			} else if (activeHandle.id === 'right-handle') {
+				const newWidth = initialWidth + (event.clientX - initialX);
+
+				if (newWidth > 0) {
+					activeHandle.parentElement.style.width = newWidth + 'px';
+				}
+			}else if (activeHandle.id === 'right-handle') {
+				const newWidth = initialWidth + (event.clientX - initialX);
+
+				if (newWidth > 0) {
+					activeHandle.parentElement.style.width = newWidth + 'px';
+				}
+			}
+		}
+
+		function stopResize() {
+			console.log('handle startstopResize()');
+			activeHandle = null;
+			initialX = 0;
+			initialY = 0;
+			initialWidth = 0;
+			initialHeight = 0;
+			document.removeEventListener('mousemove', resizeWall);
+			document.removeEventListener('mouseup', stopResize);
+		}
+
+			// handles.forEach(handle => {
+			// 	console.log('handle handles()');
+			// 	handle.addEventListener('mousedown', startResize);
+			// });
+
+
+			// NEW
+
+		// const house = document.querySelector('#house');
+		const wallTop = document.querySelectorAll('.wall-top');
+		const innerWall = document.querySelectorAll('.inner');
+		let activeNewHandle = null;
+		let initialNewX = 0;
+		let initialNewY = 0;
+		let initialNewWidth = 0;
+		let initialNewHeight = 0;
+
+		function startNewResize(event) {
+			console.log('handle startNewResize()');
+			console.log('event', event);
+			activeNewHandle = event.target;
+			const wallNew = activeNewHandle.parentElement;
+			console.log('wallnew', wallNew);
+			initialNewX = event.clientX;
+			initialNewY = event.clientY;
+			initialNewWidth = wallNew.offsetWidth;
+			initialNewHeight = wallNew.offsetHeight;
+			console.log('new height and width',initialNewWidth,initialNewHeight);
+			document.addEventListener('mousemove', resizeNewWall);
+			document.addEventListener('mouseup', stopNewResize);
+		}
+
+		function resizeNewWall(event) {
+			// console.log(event);
+			console.log('handle resizeNewWall()');
+			if (activeNewHandle.id === 'wall-top-handle') {
+				console.log('active top wall');
+				const wallNewHeight = initialNewHeight + (initialNewY - event.clientY);
+
+				if ( wallNewHeight > 0) {
+					console.log('wallnewheight');
+					activeNewHandle.parentElement.style.top = event.clientNewY + 'px';
+					activeNewHandle.parentElement.style.height = wallNewHeight + 'px';
+				}
+			} 
+		}
+
+		function stopNewResize() {
+			console.log('handle stopNewResize()');
+			activeNewHandle = null;
+			initialNewX = 0;
+			initialNewY = 0;
+			initialNewWidth = 0;
+			initialNewHeight = 0;
+			document.removeEventListener('mousemove', resizeNewWall);
+			document.removeEventListener('mouseup', stopNewResize);
+		}
+
+		innerWall.forEach(inner => {
+			console.log('handle innerWall()');
+			inner.addEventListener('mousedown', startNewResize);
+		});
+
+	</script>
+
+
+</body>
+</html>
